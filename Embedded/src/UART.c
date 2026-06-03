@@ -12,26 +12,21 @@ uint32_t *GPIOC_CRH = (uint32_t *)(0x40011000 + 0x04);
 
 int UART_INFO(void){
     for(int i=0; str[i] != '\0'; i++){
-    //Check TXE flag 
     while(!(*SR & (1<<7)));
-    //Write DR 
     *DR = str[i];
     };
 }
 
 void UART_INIT(){
-        //Enable Clock and GPIO pins
+ 
     *APB2ENR |= (1<<14) | (1<<2);
     *CRH &= ~(0xf<<4);
     *CRH |= (0x9<<4);
     *CRH &= ~(0xf<<8);
     *CRH |= (0x4<<8);
-    //Setting up the baud rate
     *BRR = 833;
-     //enable the USART n transmitter and reciever
     *CR1 |= (1<<13) | (1<<3);
     UART_INFO();
-    //Check TC flag
     while(!(*SR & (1<<6)));
     while(1);
 }
